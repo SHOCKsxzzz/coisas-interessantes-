@@ -1,0 +1,47 @@
+from datetime import datetime
+
+# ==========================================
+# INSIRA SEU NASCIMENTO AQUI:
+ano_nasc = 2003
+mes_nasc = 7
+dia_nasc = 7
+hora_nasc = 22
+minuto_nasc = 0
+segundo_nasc = 0
+# ==========================================
+
+# Cria objetos de data/hora
+nascimento = datetime(ano_nasc, mes_nasc, dia_nasc, hora_nasc, minuto_nasc, segundo_nasc)
+agora = datetime.now()
+
+# Calcula a diferença total (delta)
+diferenca = agora - nascimento
+
+# Extrai os segundos totais e converte para as unidades desejadas
+total_segundos = int(diferenca.total_seconds())
+
+# Conversões
+anos = agora.year - nascimento.year
+# Ajuste caso ainda não tenha feito aniversário este ano
+if (agora.month, agora.day) < (nascimento.month, nascimento.day):
+    anos -= 1
+
+dias_totais = diferenca.days
+horas_totais = total_segundos // 3600
+minutos_totais = total_segundos // 60
+
+# Restantes para exibição detalhada
+segundos_restantes = total_segundos % 60
+minutos_restantes = (total_segundos // 60) % 60
+horas_restantes = (total_segundos // 3600) % 24
+
+# Exibição do resultado
+print(f"Data de nascimento: {nascimento.strftime('%d/%m/%Y às %H:%M:%S')}")
+print(f"Data atual: {agora.strftime('%d/%m/%Y às %H:%M:%S')}\n")
+
+print("Você tem exatamente:")
+print(f"• Aproximadamente {anos} anos (ou {dias_totais} dias)")
+print(f"• Ou {horas_totais:,} horas".replace(",", "."))
+print(f"• Ou {minutos_totais:,} minutos".replace(",", "."))
+print(f"• Ou {total_segundos:,} segundos".replace(",", "."))
+print(f"\nDetalhado: {anos} anos, {dias_totais % 365} dias, {horas_restantes}h, {minutos_restantes}m e {segundos_restantes}s")

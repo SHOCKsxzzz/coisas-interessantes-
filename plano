@@ -1,0 +1,12 @@
+from datetime import datetime
+
+# Obtém a data e hora atuais
+agora = datetime.now()
+
+# Extrai hora, minuto e segundo
+hora = agora.hour
+minuto = agora.minute
+segundo = agora.second
+
+# Exibe o resultado formatado
+print(f"Hora atual: {hora:02d}:{minuto:02d}:{segundo:02d}")

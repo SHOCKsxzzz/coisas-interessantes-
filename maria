@@ -1,0 +1,78 @@
+import sys
+import random
+import pygame
+
+# Inicialização do Pygame
+pygame.init()
+
+# Configurações da Tela
+LARGURA, ALTURA = 800, 600
+TELA = pygame.display.set_mode((LARGURA, ALTURA))
+pygame.display.set_caption("Simulador de Gravidade e Partículas")
+
+# Cores e Configurações
+PRETO = (15, 15, 15)
+GRAVIDADE = 0.3
+FPS = 60
+
+class Particula:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.vx = random.uniform(-4, 4)  # Velocidade horizontal
+        self.vy = random.uniform(-6, 0)  # Velocidade vertical inicial (jogando para cima)
+        self.raio = random.randint(4, 9)
+        self.cor = (random.randint(100, 255), random.randint(100, 255), 255)
+        self.vida = 255  # Efeito de desaparecimento (opcional)
+
+    def atualizar(self):
+        # Aplica gravidade
+        self.vy += GRAVIDADE
+        self.x += self.vx
+        self.y += self.vy
+
+        # Colisão com o chão
+        if self.y >= ALTURA - self.raio:
+            self.y = ALTURA - self.raio
+            self.vy *= -0.75  # Inverte e perde velocidade (coeficiente de restituição)
+            self.vx *= 0.98   # Atrito com o chão
+
+        # Colisão com as paredes laterais
+        if self.x <= self.raio:
+            self.x = self.raio
+            self.vx *= -1
+        elif self.x >= LARGURA - self.raio:
+            self.x = LARGURA - self.raio
+            self.vx *= -1
+
+    def desenhar(self, tela):
+        pygame.draw.circle(tela, self.cor, (int(self.x), int(self.y)), self.raio)
+
+def main():
+    relogio = pygame.time.Clock()
+    particulas = []
+
+    while True:
+        TELA.fill(PRETO)
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            
+            # Se o usuário clicar com o mouse, cria um grupo de partículas no local
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                mx, my = pygame.mouse.get_pos()
+                for _ in range(15):  # Cria 15 partículas por clique
+                    particulas.append(Particula(mx, my))
+
+        # Atualiza e desenha todas as partículas
+        for p in particulas:
+            p.atualizar()
+            p.desenhar(TELA)
+
+        pygame.display.flip()
+        relogio.tick(FPS)
+
+if __name__ == "__main__":
+    main()
